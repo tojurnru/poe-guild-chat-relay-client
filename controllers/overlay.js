@@ -99,6 +99,7 @@ module.exports = async (eventEmitter) => {
       }
     ]);
 
+    tray.on('double-click', () => { createSettingsWindow(); })
     tray.setToolTip(app.getName());
     tray.setContextMenu(contextMenu);
   }
