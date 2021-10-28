@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const { app, shell, globalShortcut, ipcMain, BrowserWindow, Tray, nativeImage, Menu } = require('electron');
 const { overlayWindow } = require('electron-overlay-window');
@@ -129,6 +127,7 @@ module.exports = async (eventEmitter) => {
     logger.debug(`web-notify (${type}) ${message}`);
   });
 
+  /*
   eventEmitter.on('app-notify-chat', (line) => {
     // const type = 'error';
     const type = 'success';
@@ -138,6 +137,7 @@ module.exports = async (eventEmitter) => {
 
     logger.debug(`web-notify (${type}) ${line}`);
   });
+  */
 
   ipcMain.on('web-mouse', (event, isMouseEnter) => {
     if (isMouseEnter) {

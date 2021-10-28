@@ -1,5 +1,3 @@
-'use strict';
-
 const pkg = require('../package.json')
 const winston = require('winston');
 const { printf, combine, timestamp } = winston.format;

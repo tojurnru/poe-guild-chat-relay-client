@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>[APP_TITLE] - Settings</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../node_modules/toastr/build/toastr.css">
     <link rel="stylesheet" href="./settings.css">
   </head>
   <body>
     <div id="menubar">
-      [APP_TITLE] - Settings
+      <span id="menubar-title">[productName] - Settings</span>
       <button id="button-close">X</button>
     </div>
     <div id="content">
@@ -36,7 +35,8 @@
         </div>
         <div class="row">
           <div class="col">
-            <button id="button-save">Save</button>
+            <button id="button-save" class="button-action">Save & Quit</button>
+            <button id="button-cancel" class="button-action">Cancel</button>
             <div class="note">Please restart application manually in order for the settings to take effect</div>
           </div>
         </div>

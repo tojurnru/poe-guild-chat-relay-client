@@ -69,7 +69,7 @@ input[type=text] {
   width: 95%;
 }
 
-#button-save {
+.button-action {
   border-radius: 0px;
   border-color: #444444;
   background-color: #111111;

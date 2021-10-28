@@ -1,5 +1,3 @@
-'use strict';
-
 const sane = require('sane');
 const fs = require('fs');
 const readline = require('readline');
@@ -83,8 +81,9 @@ module.exports = (eventEmitter) => {
         .on('line', (line) => {
           logger.silly(`CLIENT.TXT ${line}`);
 
-          if (line.includes('&<KotRT>')) {
+          if (line.match(/&<\S*>/)) {
             logger.debug(line);
+
             eventEmitter.emit('app-notify-chat', line);
           }
         });

@@ -1,5 +1,3 @@
-'use strict';
-
 const logger = require('../util/logger');
 const config = require('../util/config').getConfig();
 

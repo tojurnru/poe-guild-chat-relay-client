@@ -1,8 +1,5 @@
-'use strict';
-
-const { BrowserWindow, nativeImage, ipcMain } = require('electron');
+const { BrowserWindow, app, nativeImage, ipcMain } = require('electron');
 const Config = require('../util/config');
-const logger = require('../util/logger');
 
 let window;
 
@@ -38,7 +35,10 @@ function createWindow() {
   }
 
   window.once('ready-to-show', () => {
-    window.webContents.send('web-settings', Config.getConfig());
+    const config = Config.getConfig();
+    config.productName = app.getName();
+
+    window.webContents.send('web-settings', config);
 
     window.show();
   });
@@ -55,12 +55,16 @@ function closeWindow() {
  * Event Setup
  */
 
-ipcMain.on('web-settings-close', (event, config) => {
+ipcMain.on('web-settings-close', (event, quit, config) => {
   if (config) {
     Config.setConfig(config);
   }
 
-  closeWindow();
+  if (quit) {
+    app.quit();
+  } else {
+    closeWindow();
+  }
 });
 
 module.exports = {

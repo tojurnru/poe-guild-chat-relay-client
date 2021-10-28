@@ -6,12 +6,16 @@ $('#button-close').on('click', function(e) {
   ipcRenderer.send('web-settings-close');
 });
 
+$('#button-cancel').on('click', function(e) {
+  ipcRenderer.send('web-settings-close');
+});
+
 $('#button-save').on('click', function(e) {
   const CLIENTTXT_PATH = $('#input-clienttxt-text').val();
   const POE_WINDOW_TITLE = $('#input-poe-window-title').val();
   const DEBUG = $('#input-debug').is(":checked");
 
-  ipcRenderer.send('web-settings-close', { CLIENTTXT_PATH, POE_WINDOW_TITLE, DEBUG });
+  ipcRenderer.send('web-settings-close', true, { CLIENTTXT_PATH, POE_WINDOW_TITLE, DEBUG });
 });
 
 $('#input-clienttxt-file').on('change', function (e) {
@@ -24,6 +28,7 @@ $('#input-clienttxt-file').on('change', function (e) {
 // web event handling
 
 ipcRenderer.on('web-settings', (event, config) => {
+  $('#menubar-title').html(`${config.productName} - Settings`);
   $('#input-clienttxt-text').val(config.CLIENTTXT_PATH);
   $('#input-poe-window-title').val(config.POE_WINDOW_TITLE);
   $('#input-debug').prop('checked', config.DEBUG);

@@ -1,18 +1,14 @@
-'use strict';
-
 const fs = require('fs');
 const path = require('path');
 const logger = require('./logger');
 
 const filePath = path.join(__dirname, '../config.json');
 
-/*
 const DEFAULT_CONFIG = {
   CLIENTTXT_PATH: '',
   POE_WINDOW_TITLE: 'Path of Exile',
   DEBUG: false
 };
-*/
 
 let config = undefined;
 
