@@ -14,6 +14,22 @@ const COMMON_PATH = [
   'D:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt'
 ];
 
+const getGuildName = (line) => {
+  const ltrim = line.substr(line.indexOf('&<') + 2);
+  const rtrim = ltrim.indexOf('> ');
+  return ltrim.substr(0, rtrim);
+}
+
+const getGuildMember = (line) => {
+  const ltrim = line.substr(line.indexOf('> ') + 2);
+  const rtrim = ltrim.indexOf(':');
+  return ltrim.substr(0, rtrim);
+}
+
+const getMessage = (line) => {
+  return line.substr(line.indexOf(': ') + 2);
+}
+
 module.exports = (eventEmitter) => {
 
   /**
@@ -67,24 +83,29 @@ module.exports = (eventEmitter) => {
     })
     .on('change', (filepath, root, stat) => {
 
-      const options = {
-        encoding: 'utf-8',
-        start: index
-      };
-
+      const options = { encoding: 'utf-8', start: index };
+      const input = fs.createReadStream(CLIENTTXT_PATH, options);
       index = stat.size;
 
       readline
-        .createInterface({
-          input: fs.createReadStream(CLIENTTXT_PATH, options)
-        })
+        .createInterface({ input })
         .on('line', (line) => {
+
+          /**
+           * process line here
+           */
+
           logger.silly(`CLIENT.TXT ${line}`);
 
-          if (line.match(/&<\S*>/)) {
+          if (line.match(/&<\S*>/)) { // process guild message
             logger.debug(line);
 
-            eventEmitter.emit('app-notify-chat', line);
+            // get guild name
+            const guildName = getGuildName(line);
+            const guildMember = getGuildMember(line);
+            const message = getMessage(line);
+
+            eventEmitter.emit('app-cache', { guildName, guildMember, message });
           }
         });
     });
