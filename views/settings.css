@@ -37,6 +37,12 @@ body {
   line-height: 26px;
 }
 
+#container-info {
+  font-size: 12px;
+  color: #98DAFE;
+  line-height: 18px;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;

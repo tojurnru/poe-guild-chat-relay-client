@@ -106,38 +106,31 @@ module.exports = async (eventEmitter) => {
    * Event Setup
    */
 
+  const title = app.getName();
+
   eventEmitter.on('app-notify-success', (message) => {
     const type = 'success';
-    const title = app.getName();
-
     window.webContents.send('web-notify', { type, title, message });
+    logger.debug(`web-notify (${type}) ${message}`);
+  });
 
+  eventEmitter.on('app-notify-warning', (message) => {
+    const type = 'warning';
+    window.webContents.send('web-notify', {
+      type, title, message,
+      options: { timeOut: 20000, extendedTimeout: 20000 }
+    });
     logger.debug(`web-notify (${type}) ${message}`);
   });
 
   eventEmitter.on('app-notify-error', (message) => {
     const type = 'error';
-    const title = app.getName();
-
     window.webContents.send('web-notify', {
       type, title, message,
       options: { timeOut: 0, extendedTimeOut: 0 }
     });
-
     logger.debug(`web-notify (${type}) ${message}`);
   });
-
-  /*
-  eventEmitter.on('app-notify-chat', (line) => {
-    // const type = 'error';
-    const type = 'success';
-    const title = app.getName();
-
-    window.webContents.send('web-notify', { type, title, message: line });
-
-    logger.debug(`web-notify (${type}) ${line}`);
-  });
-  */
 
   ipcMain.on('web-mouse', (event, isMouseEnter) => {
     if (isMouseEnter) {

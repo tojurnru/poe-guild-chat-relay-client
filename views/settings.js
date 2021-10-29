@@ -16,7 +16,7 @@ $('#button-save').on('click', function (e) {
     POE_WINDOW_TITLE: $('#input-poe-window-title').val(),
     DEBUG: $('#input-debug').is(":checked"),
     URL: $('#input-url').val(),
-    TOKEN: $('#input-token').val(),
+    GUILD_TAG: $('#input-guild-tag').val(),
   }
 
   ipcRenderer.send('web-settings-close', true, config);
@@ -32,10 +32,38 @@ $('#input-clienttxt-file').on('change', function (e) {
 // web event handling
 
 ipcRenderer.on('web-settings', (event, config) => {
-  $('#menubar-title').html(`${config.productName} - Settings`);
-  $('#input-clienttxt-text').val(config.CLIENTTXT_PATH);
-  $('#input-poe-window-title').val(config.POE_WINDOW_TITLE);
-  $('#input-debug').prop('checked', config.DEBUG);
-  $('#input-url').val(config.URL);
-  $('#input-token').val(config.TOKEN);
+  const {
+    productName,
+    CLIENTTXT_PATH,
+    POE_WINDOW_TITLE,
+    DEBUG,
+    URL,
+    GUILD_TAG,
+  } = config;
+
+  $('#menubar-title').html(`${productName} - Settings`);
+  $('#input-clienttxt-text').val(CLIENTTXT_PATH);
+  $('#input-poe-window-title').val(POE_WINDOW_TITLE);
+  $('#input-debug').prop('checked', DEBUG);
+  $('#input-url').val(URL);
+  $('#input-guild-tag').val(GUILD_TAG);
+});
+
+ipcRenderer.on('web-server-data', (event, data = {}) => {
+  const { status, clients, received } = data;
+  const date = new Date();
+  const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
+  let html = '';
+
+  if (status === 200) {
+    html += `Connected (${time})<br>`;
+    html += `Clients Online: ${clients}<br>`;
+  } else {
+    html += `NOT Connected (${time})<br>`;
+  }
+
+  html += `Chat Sent: ${received}<br>`;
+
+  $('#container-info').html(html);
 });

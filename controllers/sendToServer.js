@@ -1,17 +1,25 @@
 const axios = require('axios');
+const { nanoid } = require('nanoid');
 
 const Config = require('../util/config');
 const logger = require('../util/logger');
 const pkg = require('../package.json')
 
-const { URL, TOKEN } = Config.getConfig();
+const { URL, GUILD_TAG } = Config.getConfig();
 
-let sent = false;
+const url = `${URL}/api/message`;
+const auth = {
+  username: nanoid(),
+  password: GUILD_TAG
+};
+const headers = {
+  'User-Agent': `tojurnru:poe-chat-relay-tool v${pkg.version}`
+};
 
 module.exports = (eventEmitter) => {
 
   if (!URL) {
-    const message = 'Empty URL. Going to ignore sending any data. Please set the file path in Settings page (right click taskbar icon -> Settings)';
+    const message = 'Empty URL. Please set URL in Settings page (right click taskbar icon -> Settings)';
     eventEmitter.emit('app-notify-error', message);
     return;
   }
@@ -20,27 +28,25 @@ module.exports = (eventEmitter) => {
     const { isAxiosError, code, config, response = {} } = error;
     if (!isAxiosError) throw error;
 
+    const { data, status = 'N/A' } = response;
+
     const configStr = JSON.stringify(config, null, 2);
-    const dataStr = JSON.stringify(response.data, null, 2);
-    logger.error(`Axios Code: ${code}\nConfig:\n${configStr}\nData:\n${dataStr}`);
+    const dataStr = JSON.stringify(data, null, 2);
+    let errorMessage = `Axios Code: ${code}, HTTP: ${status}\n`;
+    errorMessage += `Config: ${configStr}\n`;
+    errorMessage += `Data: ${dataStr}`;
+    logger.error(errorMessage);
 
-    if (!sent) {
-      const message = `Unable to send message to server. Check logs and settings. (${code})`;
-      eventEmitter.emit('app-notify-error', message);
-      sent = true;
-    }
-  };
-
-  const url = `${URL}/api/message`;
-  const headers = {
-    'Authorization': `Bearer ${TOKEN}`,
-    'User-Agent': `tojurnru:poe-chat-relay-tool v${pkg.version}`
+    const message = `Can't connect to server. Check logs for more info. (Code: ${code}, HTTP: ${status})`;
+    eventEmitter.emit('app-notify-warning', message);
+    eventEmitter.emit('app-server-data', { status });
   };
 
   eventEmitter.on('app-send-to-server', async (lines) => {
     try {
-      const response = await axios.post(url, lines, { headers });
+      const response = await axios.post(url, lines, { auth, headers });
       logger.debug(`response: ${JSON.stringify(response.data)}`);
+      eventEmitter.emit('app-server-data', response.data);
     } catch (error) {
       axiosErrorHandler(error);
     }

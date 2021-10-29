@@ -2,8 +2,17 @@ const { BrowserWindow, app, nativeImage, ipcMain } = require('electron');
 const Config = require('../util/config');
 
 let window;
+const localData = {
+  status: 0,
+  clients: 0,
+  received: 0
+};
 
-function createWindow() {
+/**
+ * Functions
+ */
+
+const createWindow = () => {
 
   if (window) {
     try {
@@ -17,7 +26,7 @@ function createWindow() {
 
   window = new BrowserWindow({
     width: 600,
-    height: 400,
+    height: 460,
     // icon: nativeImage.createFromPath('./images/icon-20x16.png'),
     fullscreenable: false,
     frame: false,
@@ -42,32 +51,42 @@ function createWindow() {
 
     window.show();
   });
-}
+};
 
-function closeWindow() {
+const closeWindow = () => {
   if (window) {
     window.close();
     window = undefined;
   }
-}
+};
 
-/**
- * Event Setup
- */
+const init = async (eventEmitter) => {
 
-ipcMain.on('web-settings-close', (event, quit, config) => {
-  if (config) {
-    Config.setConfig(config);
-  }
+  ipcMain.on('web-settings-close', (event, quit, config) => {
+    if (config) {
+      Config.setConfig(config);
+    }
 
-  if (quit) {
-    app.quit();
-  } else {
-    closeWindow();
-  }
-});
+    if (quit) {
+      app.quit();
+    } else {
+      closeWindow();
+    }
+  });
+
+  eventEmitter.on('app-server-data', (data) => {
+    const { status, clients = 0, received = 0 } = data;
+    localData.status = status;
+    localData.clients = clients;
+    localData.received += received;
+
+    if (window) {
+      window.webContents.send('web-server-data', localData);
+    }
+  });
+};
 
 module.exports = {
-  createWindow,
-  closeWindow
+  init,
+  createWindow
 };

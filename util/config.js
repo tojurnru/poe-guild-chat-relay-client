@@ -9,7 +9,7 @@ const DEFAULT_CONFIG = {
   POE_WINDOW_TITLE: 'Path of Exile',
   DEBUG: false,
   URL: '',
-  TOKEN: ''
+  GUILD_TAG: ''
 };
 
 let config = undefined;

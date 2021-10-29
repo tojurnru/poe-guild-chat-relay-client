@@ -5,7 +5,7 @@ const readline = require('readline');
 const Config = require('../util/config');
 const logger = require('../util/logger');
 
-let { CLIENTTXT_PATH } = Config.getConfig();
+let { CLIENTTXT_PATH, GUILD_TAG } = Config.getConfig();
 
 const COMMON_PATH = [
   'C:/Program Files (x86)/Grinding Gear Games/Path of Exile/logs/Client.txt',
@@ -14,14 +14,10 @@ const COMMON_PATH = [
   'D:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt'
 ];
 
-const getGuildName = (line) => {
-  const ltrim = line.substr(line.indexOf('&<') + 2);
-  const rtrim = ltrim.indexOf('> ');
-  return ltrim.substr(0, rtrim);
-}
+const keyword = `&<${GUILD_TAG}> `;
 
 const getGuildMember = (line) => {
-  const ltrim = line.substr(line.indexOf('> ') + 2);
+  const ltrim = line.substr(line.indexOf(keyword) + keyword.length);
   const rtrim = ltrim.indexOf(':');
   return ltrim.substr(0, rtrim);
 }
@@ -97,15 +93,13 @@ module.exports = (eventEmitter) => {
 
           logger.silly(`CLIENT.TXT ${line}`);
 
-          if (line.match(/&<\S*>/)) { // process guild message
+          if (line.match(keyword)) { // process guild message
             logger.debug(line);
 
-            // get guild name
-            const guild = getGuildName(line);
             const member = getGuildMember(line);
             const message = getMessage(line);
 
-            eventEmitter.emit('app-cache', { guild, member, message });
+            eventEmitter.emit('app-cache', { member, message });
           }
         });
     });
