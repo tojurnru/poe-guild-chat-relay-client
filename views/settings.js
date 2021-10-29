@@ -49,8 +49,8 @@ ipcRenderer.on('web-settings', (event, config) => {
   $('#input-guild-tag').val(GUILD_TAG);
 });
 
-ipcRenderer.on('web-server-data', (event, data = {}) => {
-  const { status, clients, received } = data;
+ipcRenderer.on('web-server-info', (event, serverInfo = {}) => {
+  const { status, code, clients, received } = serverInfo;
   const date = new Date();
   const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
@@ -60,7 +60,9 @@ ipcRenderer.on('web-server-data', (event, data = {}) => {
     html += `Connected (${time})<br>`;
     html += `Clients Online: ${clients}<br>`;
   } else {
-    html += `NOT Connected (${time})<br>`;
+    html += `NOT CONNECTED (${time})<br>`;
+    html += `Error Code: ${code}<br>`;
+    html += `HTTP Status: ${status}<br>`;
   }
 
   html += `Chat Sent: ${received}<br>`;

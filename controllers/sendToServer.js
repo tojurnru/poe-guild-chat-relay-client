@@ -25,7 +25,7 @@ module.exports = (eventEmitter) => {
   }
 
   const axiosErrorHandler = (error) => {
-    const { isAxiosError, code, config, response = {} } = error;
+    const { isAxiosError, code = 'N/A', config, response = {} } = error;
     if (!isAxiosError) throw error;
 
     const { data, status = 'N/A' } = response;
@@ -37,16 +37,16 @@ module.exports = (eventEmitter) => {
     errorMessage += `Data: ${dataStr}`;
     logger.error(errorMessage);
 
-    const message = `Can't connect to server. Check logs for more info. (Code: ${code}, HTTP: ${status})`;
+    const message = `Can't connect to server. Check settings/logs for more info. (Code: ${code}, HTTP: ${status})`;
     eventEmitter.emit('app-notify-warning', message);
-    eventEmitter.emit('app-server-data', { status });
+    eventEmitter.emit('app-server-response', { status, code });
   };
 
   eventEmitter.on('app-send-to-server', async (lines) => {
     try {
       const response = await axios.post(url, lines, { auth, headers });
       logger.debug(`response: ${JSON.stringify(response.data)}`);
-      eventEmitter.emit('app-server-data', response.data);
+      eventEmitter.emit('app-server-response', response.data);
     } catch (error) {
       axiosErrorHandler(error);
     }

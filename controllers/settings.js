@@ -2,7 +2,8 @@ const { BrowserWindow, app, nativeImage, ipcMain } = require('electron');
 const Config = require('../util/config');
 
 let window;
-const localData = {
+const serverInfo = {
+  code: '',
   status: 0,
   clients: 0,
   received: 0
@@ -48,6 +49,7 @@ const createWindow = () => {
     config.productName = app.getName();
 
     window.webContents.send('web-settings', config);
+    window.webContents.send('web-server-info', serverInfo);
 
     window.show();
   });
@@ -74,14 +76,15 @@ const init = async (eventEmitter) => {
     }
   });
 
-  eventEmitter.on('app-server-data', (data) => {
-    const { status, clients = 0, received = 0 } = data;
-    localData.status = status;
-    localData.clients = clients;
-    localData.received += received;
+  eventEmitter.on('app-server-response', (responseData) => {
+    const { status, code = '', clients = 0, received = 0 } = responseData;
+    serverInfo.status = status;
+    serverInfo.code = code;
+    serverInfo.clients = clients;
+    serverInfo.received += received;
 
     if (window) {
-      window.webContents.send('web-server-data', localData);
+      window.webContents.send('web-server-info', serverInfo);
     }
   });
 };
