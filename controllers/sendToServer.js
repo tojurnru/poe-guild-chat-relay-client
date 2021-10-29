@@ -19,7 +19,7 @@ const headers = {
 module.exports = (eventEmitter) => {
 
   if (!URL) {
-    const message = 'Empty URL. Please set URL in Settings page (right click taskbar icon -> Settings)';
+    const message = 'Empty URL. Please set URL in Settings page (double-click taskbar icon)';
     eventEmitter.emit('app-notify-error', message);
     return;
   }

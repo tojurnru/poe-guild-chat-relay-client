@@ -1,11 +1,11 @@
 {
-  "name": "poe-chat-relay-tool",
+  "name": "poe-guild-chat-relay-client",
   "version": "1.0.0",
   "description": "A client tool that reads in game guild chat and post to discord (via server)",
   "author": "tojurnru <thisisexactlymyemail@gmail.com>",
   "license": "Apache-2.0",
   "main": "app.js",
-  "productName": "POE Chat Relay Tool",
+  "productName": "POE Guild Chat Relay",
   "scripts": {
     "dev": "electron .",
     "start": "electron .",

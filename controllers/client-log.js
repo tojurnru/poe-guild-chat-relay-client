@@ -42,7 +42,7 @@ module.exports = (eventEmitter) => {
     }
 
     if (!CLIENTTXT_PATH) {
-      const message = 'Unable to find Client.txt. Please set the file path in Settings page (right click taskbar icon -> Settings)';
+      const message = 'Unable to find Client.txt. Please set the file path in Settings page (double-click taskbar icon)';
       eventEmitter.emit('app-notify-error', message);
       return;
     }
