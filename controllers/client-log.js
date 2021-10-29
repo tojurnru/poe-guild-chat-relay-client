@@ -101,11 +101,11 @@ module.exports = (eventEmitter) => {
             logger.debug(line);
 
             // get guild name
-            const guildName = getGuildName(line);
-            const guildMember = getGuildMember(line);
+            const guild = getGuildName(line);
+            const member = getGuildMember(line);
             const message = getMessage(line);
 
-            eventEmitter.emit('app-cache', { guildName, guildMember, message });
+            eventEmitter.emit('app-cache', { guild, member, message });
           }
         });
     });

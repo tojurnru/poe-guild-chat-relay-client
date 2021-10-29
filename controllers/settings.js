@@ -17,7 +17,7 @@ function createWindow() {
 
   window = new BrowserWindow({
     width: 600,
-    height: 300,
+    height: 400,
     // icon: nativeImage.createFromPath('./images/icon-20x16.png'),
     fullscreenable: false,
     frame: false,

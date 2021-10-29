@@ -10,12 +10,16 @@ $('#button-cancel').on('click', function(e) {
   ipcRenderer.send('web-settings-close');
 });
 
-$('#button-save').on('click', function(e) {
-  const CLIENTTXT_PATH = $('#input-clienttxt-text').val();
-  const POE_WINDOW_TITLE = $('#input-poe-window-title').val();
-  const DEBUG = $('#input-debug').is(":checked");
+$('#button-save').on('click', function (e) {
+  const config = {
+    CLIENTTXT_PATH: $('#input-clienttxt-text').val(),
+    POE_WINDOW_TITLE: $('#input-poe-window-title').val(),
+    DEBUG: $('#input-debug').is(":checked"),
+    URL: $('#input-url').val(),
+    TOKEN: $('#input-token').val(),
+  }
 
-  ipcRenderer.send('web-settings-close', true, { CLIENTTXT_PATH, POE_WINDOW_TITLE, DEBUG });
+  ipcRenderer.send('web-settings-close', true, config);
 });
 
 $('#input-clienttxt-file').on('change', function (e) {
@@ -32,4 +36,6 @@ ipcRenderer.on('web-settings', (event, config) => {
   $('#input-clienttxt-text').val(config.CLIENTTXT_PATH);
   $('#input-poe-window-title').val(config.POE_WINDOW_TITLE);
   $('#input-debug').prop('checked', config.DEBUG);
+  $('#input-url').val(config.URL);
+  $('#input-token').val(config.TOKEN);
 });

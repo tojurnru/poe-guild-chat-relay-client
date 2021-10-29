@@ -1,6 +1,6 @@
 const logger = require('../util/logger');
 
-const INTERVAL = 3000;
+const INTERVAL = 6000;
 
 module.exports = (eventEmitter) => {
 

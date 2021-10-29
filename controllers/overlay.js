@@ -116,7 +116,7 @@ module.exports = async (eventEmitter) => {
   });
 
   eventEmitter.on('app-notify-error', (message) => {
-    const type = 'warning';
+    const type = 'error';
     const title = app.getName();
 
     window.webContents.send('web-notify', {

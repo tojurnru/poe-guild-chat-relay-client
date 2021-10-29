@@ -1,13 +1,13 @@
 {
   "name": "poe-chat-relay-tool",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "app.js",
   "productName": "POE Chat Relay Tool",
   "scripts": {
     "dev": "electron .",
     "start": "electron .",
-    "prebuild": "npm install && npm install --only=dev",
-    "build": "npx electron-packager . --icon views/icon.ico --overwrite"
+    "prebuild": "yarn",
+    "build": "yarn electron-packager . --icon images/icon.ico --overwrite"
   },
   "dependencies": {
     "axios": "^0.21.1",
